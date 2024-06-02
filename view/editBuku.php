@@ -2,10 +2,76 @@
 session_start();
 
 if (empty($_SESSION['status'])) {
-	echo "<script>
+    echo "<script>
             alert('Maaf masuk akun terlebih dahulu!');
             window.location.href='login.php';
           </script>";
+    exit();
+}
+
+if (isset($_GET['logout'])) {
+    session_unset();
+    session_destroy();
+    header('Location: login.php');
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $idBuku = isset($_POST['idBuku']) ? $_POST['idBuku'] : null;
+    $kategori = isset($_POST['kategori']) ? $_POST['kategori'] : null;
+    $namaBuku = isset($_POST['namabuku']) ? $_POST['namabuku'] : null;
+    $harga = isset($_POST['harga']) ? $_POST['harga'] : null;
+    $stok = isset($_POST['stok']) ? $_POST['stok'] : null;
+    $penerbit = isset($_POST['pilihan']) ? $_POST['pilihan'] : null;
+
+    // Periksa apakah semua input telah diisi
+    if ($idBuku && $kategori && $namaBuku && $harga && $stok && $penerbit) {
+        $url = "https://backend-book-tcc-3klgbesmja-et.a.run.app/books/$idBuku";
+        $newBook = json_encode([
+            'idBuku' => $idBuku,
+            'kategori' => $kategori,
+            'namaBuku' => $namaBuku,
+            'harga' => $harga,
+            'stok' => $stok,
+            'penerbit' => $penerbit
+        ]);
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_CUSTOMREQUEST, "PUT");
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $newBook);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-Type: application/json'));
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($http_code == 200 || $http_code == 201) {
+            header('Location: admin.php');
+            exit();
+        } else {
+            echo "Failed to update book. HTTP Status Code: $http_code";
+        }
+    } else {
+        echo "All fields, including the image, are required.";
+    }
+} else {
+    $idBuku = isset($_GET['idBu']) ? $_GET['idBu'] : null;
+
+    if ($idBuku) {
+        $apiUrl = "https://backend-book-tcc-3klgbesmja-et.a.run.app/books/$idBuku";
+        $response = file_get_contents($apiUrl);
+        $bookData = json_decode($response, true);
+        $apiUrlPenerbits = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits';
+        $responsePenerbits = file_get_contents($apiUrlPenerbits);
+        $penerbits = json_decode($responsePenerbits, true);
+
+        if (!$bookData) {
+            die("Failed to fetch book data.");
+        }
+    } else {
+        die("gagal mengambil id buku");
+    }
 }
 ?>
 
@@ -23,22 +89,22 @@ if (empty($_SESSION['status'])) {
     <div class="container-fluid">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-5">
-                <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="index.php">Home</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link active" href="admin.php">Admin</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="pengadaan.php">Pengadaan</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ms-auto mx-5">
-                <li class="nav-item">
-                    <a class="nav-link" href="proses/logout.php">Logout</a>
-                </li>
-            </ul>
+                <ul class="navbar-nav mx-5">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="index.php">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="admin.php">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pengadaan.php">Pengadaan</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mx-5">
+                    <li class="nav-item">
+                        <a class="nav-link" href="?logout">Logout</a>
+                    </li>
+                </ul>
             </div>
         </nav>
         <h3 class="mt-4 mx-5">Edit Buku</h3>
@@ -46,52 +112,37 @@ if (empty($_SESSION['status'])) {
             <div class="card-header">
                 Masukkan perubahan data buku
             </div>
-            <?php 
-                include 'proses/koneksi.php';
-                $idBuku = $_GET['idBu'];
-                $query = "SELECT * FROM `buku` where IDBuku =  '$idBuku'";
-
-                $sql = mysqli_query($conn, $query);
-
-                $data = mysqli_fetch_array($sql);
-            ?>
             <div class="card-body">
-                <form class="row g-3" action="proses/updateBuku.php" method="post">
+                <form class="row g-3" action="" method="post">
                     <div class="col-md-4">
-                        <label for="inputEmail4" class="form-label">Kode Buku</label>
-                        <input class="form-control" type="text" value="<?= $data['IDBuku'] ?>" name="idBuku" aria-label="Disabled input example" readonly>
+                        <label for="idBuku" class="form-label">Kode Buku</label>
+                        <input class="form-control" type="text" value="<?= $bookData['IDBuku'] ?>" name="idBuku" aria-label="Disabled input example" readonly>
                     </div>
                     <div class="col-md-8">
-                        <label for="inputPassword4" class="form-label">Kategori</label>
-                        <input type="text" class="form-control" value="<?= $data['Kategori'] ?>" name="kategori">
+                        <label for="kategori" class="form-label">Kategori</label>
+                        <input type="text" class="form-control" value="<?= $bookData['Kategori'] ?>" name="kategori">
                     </div>
                     <div class="col-12">
-                        <label for="inputAddress" class="form-label">Nama Buku</label>
-                        <input type="text" class="form-control" value="<?= $data['NamaBuku'] ?>" name="namabuku">
+                        <label for="namaBuku" class="form-label">Nama Buku</label>
+                        <input type="text" class="form-control" value="<?= $bookData['NamaBuku'] ?>" name="namabuku">
                     </div>
                     <div class="col-md-4">
-                        <label for="inputCity" class="form-label">Harga</label>
-                        <input type="number" class="form-control" value="<?= $data['Harga'] ?>" name="harga">
+                        <label for="harga" class="form-label">Harga</label>
+                        <input type="number" class="form-control" value="<?= $bookData['Harga'] ?>" name="harga">
                     </div>
                     <div class="col-md-2">
-                        <label for="inputZip" class="form-label">Stok</label>
-                        <input type="number" class="form-control" value="<?= $data['Stok'] ?>" name="stok">
+                        <label for="stok" class="form-label">Stok</label>
+                        <input type="number" class="form-control" value="<?= $bookData['Stok'] ?>" name="stok">
                     </div>
                     <div class="col-md-6">
-                        <label for="inputState" class="form-label">Penerbit</label>
-                        <select id="inputState" class="form-select" name="pilihan">
-                        <option selected><?= $data['Penerbit'] ?></option>
-                        <?php 
-                            include 'proses/koneksi.php';
-                            $query = "SELECT * FROM `penerbit`";
-
-                            $sql = mysqli_query($conn, $query);
-                            $no = 1;
-
-                            while($data = mysqli_fetch_array($sql)){
-                        ?>
-                        <option value="<?=$data['NamaPenerbit']?>"><?=$data['NamaPenerbit']?></option>
-                        <?php } ?>
+                        <label for="pilihan" class="form-label">Penerbit</label>
+                        <select id="pilihan" class="form-select" name="pilihan">
+                            <option selected><?= $bookData['Penerbit'] ?></option>
+                            <?php 
+                                foreach ($penerbits as $penerbit) {
+                                    echo "<option value=\"{$penerbit['namaPenerbit']}\">{$penerbit['namaPenerbit']}</option>";
+                                }
+                            ?>
                         </select>
                     </div>
                     <div class="col-12">

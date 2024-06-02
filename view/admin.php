@@ -2,11 +2,31 @@
 session_start();
 
 if (empty($_SESSION['status'])) {
-	echo "<script>
+    echo "<script>
             alert('Maaf masuk akun terlebih dahulu!');
             window.location.href='login.php';
           </script>";
+    exit;
 }
+
+// Logout functionality
+if (isset($_GET['logout'])) {
+    session_unset();
+    session_destroy();
+    header('Location: login.php');
+    exit();
+}
+
+$apiUrlBooks = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/books';
+$apiUrlPenerbits = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits';
+
+// Fetch books data
+$responseBooks = file_get_contents($apiUrlBooks);
+$books = json_decode($responseBooks, true);
+
+// Fetch penerbits data
+$responsePenerbits = file_get_contents($apiUrlPenerbits);
+$penerbits = json_decode($responsePenerbits, true);
 ?>
 
 <!DOCTYPE html>
@@ -23,22 +43,22 @@ if (empty($_SESSION['status'])) {
     <div class="container-fluid">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-5">
-                <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="index.php">Home</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link active" href="admin.php">Admin</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="pengadaan.php">Pengadaan</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ms-auto mx-5">
-                <li class="nav-item">
-                    <a class="nav-link" href="proses/logout.php">Logout</a>
-                </li>
-            </ul>
+                <ul class="navbar-nav mx-5">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="index.php">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="admin.php">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pengadaan.php">Pengadaan</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mx-5">
+                    <li class="nav-item">
+                        <a class="nav-link" href="?logout">Logout</a>
+                    </li>
+                </ul>
             </div>
         </nav>
         <div class="row mt-4 mx-5">
@@ -47,26 +67,23 @@ if (empty($_SESSION['status'])) {
                     <table class="table col-9">
                         <thead>
                             <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Nama Buku</th>
+                                <th scope="col">No</th>
+                                <th scope="col">Nama Buku</th>
+                                <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php 
-                                include 'proses/koneksi.php';
-                                $query = "SELECT * FROM `buku`";
-
-                                $sql = mysqli_query($conn, $query);
-                                $no = 1;
-
-                                while($data = mysqli_fetch_array($sql)){
+                            $no = 1;
+                            foreach ($books as $book) {
                             ?>
                             <tr>
-                            <td><?=$no?></td>
-                            <td><?=$data['NamaBuku']?>
-                            <a href="proses/hapusBuku.php?idB=<?= $data['IDBuku'] ?>" class="badge text-bg-danger p-2 rounded-pill float-end" style="text-decoration: none;">Hapus</a>
-                            <a href="editBuku.php?idBu=<?= $data['IDBuku'] ?>" class="badge text-bg-warning p-2 mx-2 rounded-pill float-end" style="text-decoration: none;">Edit</a>
-                            </td>
+                                <td><?=$no?></td>
+                                <td><?=$book['namaBuku']?></td>
+                                <td>
+                                    <button class="badge text-bg-danger p-2 rounded-pill" style="text-decoration: none;" onclick="deleteBook(<?= $book['idBuku'] ?>)">Hapus</button>
+                                    <a href="editBuku.php?idBu=<?= $book['idBuku'] ?>" class="badge text-bg-warning p-2 mx-2 rounded-pill" style="text-decoration: none;">Edit</a>
+                                </td>
                             </tr>
                             <?php $no+=1; } ?>
                         </tbody>
@@ -75,30 +92,27 @@ if (empty($_SESSION['status'])) {
                 </div>
             </div>
             <div class="col">
-            <div class="col-10">
+                <div class="col-10">
                     <table class="table col-9">
                         <thead>
                             <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Nama Penerbit</th>
+                                <th scope="col">No</th>
+                                <th scope="col">Nama Penerbit</th>
+                                <th scope="col">Actions</th>
                             </tr>
                         </thead>
                         <tbody>
                             <?php 
-                                include 'proses/koneksi.php';
-                                $query = "SELECT * FROM `penerbit`";
-
-                                $sql = mysqli_query($conn, $query);
-                                $no = 1;
-
-                                while($data = mysqli_fetch_array($sql)){
+                            $no = 1;
+                            foreach ($penerbits as $penerbit) {
                             ?>
                             <tr>
-                            <td><?=$no?></td>
-                            <td><?=$data['NamaPenerbit']?>
-                            <a href="proses/hapusPenerbit.php?idP=<?= $data['IDPenerbit'] ?>" class="badge text-bg-danger p-2 rounded-pill float-end" style="text-decoration: none;">Hapus</a>
-                            <a href="editPenerbit.php?idPe=<?= $data['IDPenerbit'] ?>" class="badge text-bg-warning p-2 mx-2 rounded-pill float-end" style="text-decoration: none;">Edit</a>
-                            </td>
+                                <td><?=$no?></td>
+                                <td><?=$penerbit['namaPenerbit']?></td>
+                                <td>
+                                    <button class="badge text-bg-danger p-2 rounded-pill" style="text-decoration: none;" onclick="deletePenerbit(<?= $penerbit['idPenerbit'] ?>)">Hapus</button>
+                                    <a href="editPenerbit.php?idPe=<?= $penerbit['idPenerbit'] ?>" class="badge text-bg-warning p-2 mx-2 rounded-pill" style="text-decoration: none;">Edit</a>
+                                </td>
                             </tr>
                             <?php $no+=1; } ?>
                         </tbody>
@@ -108,5 +122,48 @@ if (empty($_SESSION['status'])) {
             </div>
         </div>
     </div>
+    <script>
+        function deleteBook(idBuku) {
+            if (confirm('Apakah Anda yakin ingin menghapus buku ini?')) {
+                fetch(`https://backend-book-tcc-3klgbesmja-et.a.run.app/books/${idBuku}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Buku berhasil dihapus!');
+                        location.reload();
+                    } else {
+                        alert('Gagal menghapus buku.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan.');
+                });
+            }
+        }
+
+        function deletePenerbit(idPenerbit) {
+            if (confirm('Apakah Anda yakin ingin menghapus penerbit ini?')) {
+                fetch(`https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits/${idPenerbit}`, {
+                    method: 'DELETE'
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        alert('Penerbit berhasil dihapus!');
+                        location.reload();
+                    } else {
+                        alert('Gagal menghapus penerbit.');
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Terjadi kesalahan.');
+                });
+            }
+        }
+    </script>
 </body>
 </html>

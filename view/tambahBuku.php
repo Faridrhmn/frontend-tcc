@@ -1,11 +1,62 @@
 <?php 
 session_start();
 
+$apiUrlPenerbits = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits';
+$responsePenerbits = file_get_contents($apiUrlPenerbits);
+$penerbits = json_decode($responsePenerbits, true);
+
 if (empty($_SESSION['status'])) {
 	echo "<script>
             alert('Maaf masuk akun terlebih dahulu!');
             window.location.href='login.php';
           </script>";
+}
+
+if (isset($_GET['logout'])) {
+    session_unset();
+    session_destroy();
+    header('Location: login.php');
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $idBuku = isset($_POST['idBuku']) ? $_POST['idBuku'] : null;
+    $kategori = isset($_POST['kategori']) ? $_POST['kategori'] : null;
+    $namaBuku = isset($_POST['namabuku']) ? $_POST['namabuku'] : null;
+    $harga = isset($_POST['harga']) ? $_POST['harga'] : null;
+    $stok = isset($_POST['stok']) ? $_POST['stok'] : null;
+    $penerbit = isset($_POST['pilihan']) ? $_POST['pilihan'] : null;
+
+    // Periksa apakah semua input telah diisi
+    if ($idBuku && $kategori && $namaBuku && $harga && $stok && $penerbit) {
+        $url = "https://backend-book-tcc-3klgbesmja-et.a.run.app/books";
+        $newBook = [
+            'idBuku' => $idBuku,
+            'kategori' => $kategori,
+            'namaBuku' => $namaBuku,
+            'harga' => $harga,
+            'stok' => $stok,
+            'penerbit' => $penerbit
+        ];
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $newBook);
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($http_code == 200 || $http_code == 201) {
+            header('Location: admin.php');
+            exit();
+        } else {
+            echo "Failed to add book. HTTP Status Code: $http_code";
+        }
+    } else {
+        echo "All fields are required.";
+    }
 }
 ?>
 
@@ -36,7 +87,7 @@ if (empty($_SESSION['status'])) {
             </ul>
             <ul class="navbar-nav ms-auto mx-5">
                 <li class="nav-item">
-                    <a class="nav-link" href="proses/logout.php">Logout</a>
+                    <a class="nav-link" href="?logout">Logout</a>
                 </li>
             </ul>
             </div>
@@ -73,16 +124,10 @@ if (empty($_SESSION['status'])) {
                         <select id="inputState" class="form-select" name="pilihan">
                         <option selected>Pilih</option>
                         <?php 
-                            include 'proses/koneksi.php';
-                            $query = "SELECT * FROM `penerbit`";
-
-                            $sql = mysqli_query($conn, $query);
-                            $no = 1;
-
-                            while($data = mysqli_fetch_array($sql)){
+                            foreach ($penerbits as $penerbit) {
+                                echo "<option value=\"{$penerbit['namaPenerbit']}\">{$penerbit['namaPenerbit']}</option>";
+                            }
                         ?>
-                        <option value="<?=$data['NamaPenerbit']?>"><?=$data['NamaPenerbit']?></option>
-                        <?php } ?>
                         </select>
                     </div>
                     <div class="col-12">

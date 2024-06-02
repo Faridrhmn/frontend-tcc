@@ -32,7 +32,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $response = json_decode($result, true);
         if ($response['status'] === 'success') {
-            $_SESSION['user_id'] = $response['data']['userId'];
+            $_SESSION['status'] = "login";
             header('Location: index.php');
             exit();
         } else {

@@ -2,11 +2,26 @@
 session_start();
 
 if (empty($_SESSION['status'])) {
-	echo "<script>
+    echo "<script>
             alert('Maaf masuk akun terlebih dahulu!');
             window.location.href='login.php';
           </script>";
+    exit();
 }
+
+if (isset($_GET['logout'])) {
+    session_unset();
+    session_destroy();
+    header('Location: login.php');
+    exit();
+}
+
+// Fetch the book with the lowest stock from the API
+$apiUrl = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/books/lowest-stock';
+$response = file_get_contents($apiUrl);
+$data = json_decode($response, true);
+$book = $data['data']; // Assuming the API returns an object with a 'data' field containing the book information
+
 ?>
 
 <!DOCTYPE html>
@@ -23,39 +38,37 @@ if (empty($_SESSION['status'])) {
     <div class="container-fluid">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-5">
-                <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="index.php">Home</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="admin.php">Admin</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link active" href="pengadaan.php">Pengadaan</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ms-auto mx-5">
-                <li class="nav-item">
-                    <a class="nav-link" href="proses/logout.php">Logout</a>
-                </li>
-            </ul>
+                <ul class="navbar-nav mx-5">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="index.php">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="admin.php">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="pengadaan.php">Pengadaan</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mx-5">
+                    <li class="nav-item">
+                        <a class="nav-link" href="?logout">Logout</a>
+                    </li>
+                </ul>
             </div>
         </nav>
-        <?php 
-                include 'proses/koneksi.php';
-                $query = "SELECT * FROM `buku` ORDER BY Stok LIMIT 1";
-
-                $sql = mysqli_query($conn, $query);
-
-                $data = mysqli_fetch_array($sql);
-        ?>
+        <?php if ($book) { ?>
         <div class="card mt-4 mx-5" style="width: 30rem;">
             <div class="card-body">
-                <h5 class="card-title"><?= $data['NamaBuku'] ?> / <?= $data['Penerbit'] ?></h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">Sisa stok : <?= $data['Stok'] ?></h6>
+                <h5 class="card-title"><?= htmlspecialchars($book['namaBuku']) ?> / <?= htmlspecialchars($book['penerbit']) ?></h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Sisa stok : <?= htmlspecialchars($book['stok']) ?></h6>
                 <p class="card-text">Dibutuhkan segera buku tersebut karena stok menipis dan kebutuhan meningkat.</p>
             </div>
         </div>
+        <?php } else { ?>
+        <div class="alert alert-warning mt-4 mx-5" role="alert">
+            Tidak ada data buku yang tersedia.
+        </div>
+        <?php } ?>
     </div>
 </body>
 </html>

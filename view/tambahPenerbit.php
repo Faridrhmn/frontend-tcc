@@ -7,6 +7,51 @@ if (empty($_SESSION['status'])) {
             window.location.href='login.php';
           </script>";
 }
+
+if (isset($_GET['logout'])) {
+    session_unset();
+    session_destroy();
+    header('Location: login.php');
+    exit();
+}
+
+if ($_SERVER['REQUEST_METHOD'] === 'POST') {
+    $idPenerbit = isset($_POST['idpenerbit']) ? $_POST['idpenerbit'] : null;
+    $namaPenerbit = isset($_POST['namapenerbit']) ? $_POST['namapenerbit'] : null;
+    $alamat = isset($_POST['alamat']) ? $_POST['alamat'] : null;
+    $kota = isset($_POST['kota']) ? $_POST['kota'] : null;
+    $telepon = isset($_POST['telp']) ? $_POST['telp'] : null;
+
+    // Periksa apakah semua input telah diisi
+    if ($idPenerbit && $namaPenerbit && $alamat && $kota && $telepon) {
+        $url = "https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits";
+        $newPenerbit = [
+            'idPenerbit' => $idPenerbit,
+            'namaPenerbit' => $namaPenerbit,
+            'alamat' => $alamat,
+            'kota' => $kota,
+            'telepon' => $telepon
+        ];
+
+        $ch = curl_init($url);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+        curl_setopt($ch, CURLOPT_POST, true);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $newPenerbit);
+
+        $response = curl_exec($ch);
+        $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+        curl_close($ch);
+
+        if ($http_code == 200 || $http_code == 201) {
+            header('Location: admin.php');
+            exit();
+        } else {
+            echo "Failed to add book. HTTP Status Code: $http_code";
+        }
+    } else {
+        echo "All fields are required.";
+    }
+}
 ?>
 
 <!DOCTYPE html>
@@ -36,7 +81,7 @@ if (empty($_SESSION['status'])) {
             </ul>
             <ul class="navbar-nav ms-auto mx-5">
                 <li class="nav-item">
-                    <a class="nav-link" href="proses/logout.php">Logout</a>
+                    <a class="nav-link" href="?logout">Logout</a>
                 </li>
             </ul>
             </div>
@@ -47,7 +92,7 @@ if (empty($_SESSION['status'])) {
                 Masukkan data penerbit
             </div>
             <div class="card-body">
-                <form class="row g-3" action="proses/kePenerbit.php" method="post">
+                <form class="row g-3" method="post">
                     <div class="col-md-4">
                         <label for="inputEmail4" class="form-label">Kode Penerbit</label>
                         <input type="type" class="form-control" name="idpenerbit">
