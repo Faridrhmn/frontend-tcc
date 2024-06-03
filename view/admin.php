@@ -136,7 +136,7 @@ $penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : []
                         alert('Buku berhasil dihapus!');
                         location.reload();
                     } else {
-                        alert('Gagal menghapus buku.');
+                        alert(data);
                     }
                 })
                 .catch(error => {
@@ -157,7 +157,7 @@ $penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : []
                         alert('Penerbit berhasil dihapus!');
                         location.reload();
                     } else {
-                        alert('Gagal menghapus penerbit.');
+                        alert(data);
                     }
                 })
                 .catch(error => {
