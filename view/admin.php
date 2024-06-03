@@ -22,11 +22,13 @@ $apiUrlPenerbits = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits';
 
 // Fetch books data
 $responseBooks = file_get_contents($apiUrlBooks);
-$books = json_decode($responseBooks, true);
+$booksResponse = json_decode($responseBooks, true);
+$books = isset($booksResponse['data']) ? $booksResponse['data'] : [];
 
 // Fetch penerbits data
 $responsePenerbits = file_get_contents($apiUrlPenerbits);
-$penerbits = json_decode($responsePenerbits, true);
+$penerbitsResponse = json_decode($responsePenerbits, true);
+$penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : [];
 ?>
 
 <!DOCTYPE html>
@@ -79,10 +81,10 @@ $penerbits = json_decode($responsePenerbits, true);
                             ?>
                             <tr>
                                 <td><?=$no?></td>
-                                <td><?=$book['namaBuku']?></td>
+                                <td><?=htmlspecialchars($book['NamaBuku'])?></td>
                                 <td>
-                                    <button class="badge text-bg-danger p-2 rounded-pill" style="text-decoration: none;" onclick="deleteBook(<?= $book['idBuku'] ?>)">Hapus</button>
-                                    <a href="editBuku.php?idBu=<?= $book['idBuku'] ?>" class="badge text-bg-warning p-2 mx-2 rounded-pill" style="text-decoration: none;">Edit</a>
+                                    <button class="badge text-bg-danger p-2 rounded-pill" style="text-decoration: none;" onclick="deleteBook(<?= htmlspecialchars($book['IDBuku']) ?>)">Hapus</button>
+                                    <a href="editBuku.php?idBu=<?= htmlspecialchars($book['IDBuku']) ?>" class="badge text-bg-warning p-2 mx-2 rounded-pill" style="text-decoration: none;">Edit</a>
                                 </td>
                             </tr>
                             <?php $no+=1; } ?>
@@ -108,10 +110,10 @@ $penerbits = json_decode($responsePenerbits, true);
                             ?>
                             <tr>
                                 <td><?=$no?></td>
-                                <td><?=$penerbit['namaPenerbit']?></td>
+                                <td><?=htmlspecialchars($penerbit['NamaPenerbit'])?></td>
                                 <td>
-                                    <button class="badge text-bg-danger p-2 rounded-pill" style="text-decoration: none;" onclick="deletePenerbit(<?= $penerbit['idPenerbit'] ?>)">Hapus</button>
-                                    <a href="editPenerbit.php?idPe=<?= $penerbit['idPenerbit'] ?>" class="badge text-bg-warning p-2 mx-2 rounded-pill" style="text-decoration: none;">Edit</a>
+                                    <button class="badge text-bg-danger p-2 rounded-pill" style="text-decoration: none;" onclick="deletePenerbit(<?= htmlspecialchars($penerbit['IDPenerbit']) ?>)">Hapus</button>
+                                    <a href="editPenerbit.php?idPe=<?= htmlspecialchars($penerbit['IDPenerbit']) ?>" class="badge text-bg-warning p-2 mx-2 rounded-pill" style="text-decoration: none;">Edit</a>
                                 </td>
                             </tr>
                             <?php $no+=1; } ?>
