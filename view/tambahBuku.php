@@ -99,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 Masukkan data buku
             </div>
             <div class="card-body">
-                <form class="row g-3" action="proses/keBuku.php" method="POST">
+                <form class="row g-3" action="" method="POST">
                     <div class="col-md-4">
                         <label for="inputEmail4" class="form-label">Kode Buku</label>
                         <input type="type" class="form-control" name="idBuku">
