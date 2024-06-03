@@ -27,11 +27,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($idPenerbit && $namaPenerbit && $alamat && $kota && $telepon) {
         $url = "https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits";
         $newPenerbit = [
-            'IDPenerbit' => $idPenerbit,
-            'NamaPenerbit' => $namaPenerbit,
-            'Alamat' => $alamat,
-            'Kota' => $kota,
-            'Telepon' => $telepon
+            'idPenerbit' => $idPenerbit,
+            'namaPenerbit' => $namaPenerbit,
+            'alamat' => $alamat,
+            'kota' => $kota,
+            'telepon' => $telepon
         ];
 
         $ch = curl_init($url);
