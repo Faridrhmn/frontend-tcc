@@ -24,10 +24,12 @@ if ($response === FALSE) {
     die("Error: Unable to fetch data from the API.");
 }
 
-$books = json_decode($response, true);
+$booksResponse = json_decode($response, true);
 if (json_last_error() !== JSON_ERROR_NONE) {
     die("Error: Invalid JSON response from the API.");
 }
+
+$books = isset($booksResponse['data']) ? $booksResponse['data'] : [];
 ?>
 
 <!DOCTYPE html>
@@ -97,12 +99,12 @@ if (json_last_error() !== JSON_ERROR_NONE) {
                         ?>
                         <tr>
                             <td><?= $no ?></td>
-                            <td><?= $book['idBuku'] ?></td>
-                            <td><?= $book['kategori'] ?></td>
-                            <td><?= $book['namaBuku'] ?></td>
-                            <td><?= $book['harga'] ?></td>
-                            <td><?= $book['stok'] ?></td>
-                            <td><?= $book['penerbit'] ?></td>
+                            <td><?= htmlspecialchars($book['IDBuku']) ?></td>
+                            <td><?= htmlspecialchars($book['Kategori']) ?></td>
+                            <td><?= htmlspecialchars($book['NamaBuku']) ?></td>
+                            <td><?= htmlspecialchars($book['Harga']) ?></td>
+                            <td><?= htmlspecialchars($book['Stok']) ?></td>
+                            <td><?= htmlspecialchars($book['Penerbit']) ?></td>
                         </tr>
                         <?php
                                 $no++;
