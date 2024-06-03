@@ -62,9 +62,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $apiUrl = "https://backend-book-tcc-3klgbesmja-et.a.run.app/books/$idBuku";
         $response = file_get_contents($apiUrl);
         $bookData = json_decode($response, true);
+        $books = isset($bookData['data']) ? $bookData['data'] : [];
         $apiUrlPenerbits = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits';
         $responsePenerbits = file_get_contents($apiUrlPenerbits);
-        $penerbits = json_decode($responsePenerbits, true);
+        $penerbitsResponse = json_decode($responsePenerbits, true);
+        $penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : [];
 
         if (!$bookData) {
             die("Failed to fetch book data.");
@@ -116,23 +118,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form class="row g-3" action="" method="post">
                     <div class="col-md-4">
                         <label for="idBuku" class="form-label">Kode Buku</label>
-                        <input class="form-control" type="text" value="<?= $bookData['IDBuku'] ?>" name="idBuku" aria-label="Disabled input example" readonly>
+                        <input class="form-control" type="text" value="<?= $books['IDBuku'] ?>" name="idBuku" aria-label="Disabled input example" readonly>
                     </div>
                     <div class="col-md-8">
                         <label for="kategori" class="form-label">Kategori</label>
-                        <input type="text" class="form-control" value="<?= $bookData['Kategori'] ?>" name="kategori">
+                        <input type="text" class="form-control" value="<?= $books['Kategori'] ?>" name="kategori">
                     </div>
                     <div class="col-12">
                         <label for="namaBuku" class="form-label">Nama Buku</label>
-                        <input type="text" class="form-control" value="<?= $bookData['NamaBuku'] ?>" name="namabuku">
+                        <input type="text" class="form-control" value="<?= $books['NamaBuku'] ?>" name="namabuku">
                     </div>
                     <div class="col-md-4">
                         <label for="harga" class="form-label">Harga</label>
-                        <input type="number" class="form-control" value="<?= $bookData['Harga'] ?>" name="harga">
+                        <input type="number" class="form-control" value="<?= $books['Harga'] ?>" name="harga">
                     </div>
                     <div class="col-md-2">
                         <label for="stok" class="form-label">Stok</label>
-                        <input type="number" class="form-control" value="<?= $bookData['Stok'] ?>" name="stok">
+                        <input type="number" class="form-control" value="<?= $books['Stok'] ?>" name="stok">
                     </div>
                     <div class="col-md-6">
                         <label for="pilihan" class="form-label">Penerbit</label>
@@ -140,7 +142,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                             <option selected><?= $bookData['Penerbit'] ?></option>
                             <?php 
                                 foreach ($penerbits as $penerbit) {
-                                    echo "<option value=\"{$penerbit['namaPenerbit']}\">{$penerbit['namaPenerbit']}</option>";
+                                    echo "<option value=\"{$penerbit['NamaPenerbit']}\">{$penerbit['NamaPenerbit']}</option>";
                                 }
                             ?>
                         </select>

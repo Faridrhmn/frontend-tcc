@@ -26,11 +26,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($idPenerbit && $namaPenerbit && $alamat && $kota && $telepon) {
         $url = "https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits";
         $newPenerbit = [
-            'idPenerbit' => $idPenerbit,
-            'namaPenerbit' => $namaPenerbit,
-            'alamat' => $alamat,
-            'kota' => $kota,
-            'telepon' => $telepon
+            'IDPenerbit' => $idPenerbit,
+            'NamaPenerbit' => $namaPenerbit,
+            'Alamat' => $alamat,
+            'Kota' => $kota,
+            'Telepon' => $telepon
         ];
 
         $ch = curl_init($url);
@@ -46,7 +46,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: admin.php');
             exit();
         } else {
-            echo "Failed to add book. HTTP Status Code: $http_code";
+            echo "Failed to add penerbit. HTTP Status Code: $http_code. Hasil data: $newPenerbit";
         }
     } else {
         echo "All fields are required.";

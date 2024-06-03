@@ -3,7 +3,8 @@ session_start();
 
 $apiUrlPenerbits = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits';
 $responsePenerbits = file_get_contents($apiUrlPenerbits);
-$penerbits = json_decode($responsePenerbits, true);
+$penerbitsResponse = json_decode($responsePenerbits, true);
+$penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : [];
 
 if (empty($_SESSION['status'])) {
 	echo "<script>
@@ -125,7 +126,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                         <option selected>Pilih</option>
                         <?php 
                             foreach ($penerbits as $penerbit) {
-                                echo "<option value=\"{$penerbit['namaPenerbit']}\">{$penerbit['namaPenerbit']}</option>";
+                                echo "<option value=\"{$penerbit['NamaPenerbit']}\">{$penerbit['NamaPenerbit']}</option>";
                             }
                         ?>
                         </select>
