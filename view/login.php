@@ -20,7 +20,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         'http' => array(
             'header'  => "Content-type: application/json\r\n",
             'method'  => 'POST',
-            'content' => json_encode($data)
+            'content' => json_encode($data),
+            'ignore_errors' => true // Capture errors in response
         )
     );
 
@@ -30,17 +31,25 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     if ($result === false) {
         $error = error_get_last();
         echo "<script>alert('Error: " . addslashes($error['message']) . "'); window.location.href = 'login.php';</script>";
+        exit();
+    }
+
+    $response = json_decode($result, true);
+
+    // Check if the response is a valid JSON
+    if ($response === null && json_last_error() !== JSON_ERROR_NONE) {
+        echo "<script>alert('Error: Invalid JSON response from server.'); window.location.href = 'login.php';</script>";
+        exit();
+    }
+
+    if (isset($response['status']) && $response['status'] === 'success') {
+        $_SESSION['status'] = "login";
+        header('Location: index.php');
+        exit();
     } else {
-        $response = json_decode($result, true);
-        if (isset($response['status']) && $response['status'] === 'success') {
-            $_SESSION['status'] = "login";
-            header('Location: index.php');
-            exit();
-        } else {
-            $status = isset($response['status']) ? $response['status'] : 'unknown';
-            $errorMessage = isset($response['error']['message']) ? $response['error']['message'] : 'Unknown error';
-            echo "<script>alert('Login failed: $status - $errorMessage'); window.location.href = 'login.php';</script>";
-        }
+        $status = isset($response['status']) ? $response['status'] : 'unknown';
+        $errorMessage = isset($response['error']['message']) ? $response['error']['message'] : 'Unknown error';
+        echo "<script>alert('Login failed: $status - $errorMessage'); window.location.href = 'login.php';</script>";
     }
 }
 ?>
