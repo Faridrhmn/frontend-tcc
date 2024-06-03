@@ -83,7 +83,7 @@ $penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : []
                                 <td><?=$no?></td>
                                 <td><?=htmlspecialchars($book['NamaBuku'])?></td>
                                 <td>
-                                    <button class="badge text-bg-danger p-2 rounded-pill" style="text-decoration: none;" onclick="deleteBook(<?= htmlspecialchars($book['IDBuku']) ?>)">Hapus</button>
+                                    <button class="badge text-bg-danger p-2 rounded-pill" style="text-decoration: none;" onclick="deleteBook('<?= htmlspecialchars($book['IDBuku']) ?>')">Hapus</button>
                                     <a href="editBuku.php?idBu=<?= htmlspecialchars($book['IDBuku']) ?>" class="badge text-bg-warning p-2 mx-2 rounded-pill" style="text-decoration: none;">Edit</a>
                                 </td>
                             </tr>
@@ -112,7 +112,7 @@ $penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : []
                                 <td><?=$no?></td>
                                 <td><?=htmlspecialchars($penerbit['NamaPenerbit'])?></td>
                                 <td>
-                                    <button class="badge text-bg-danger p-2 rounded-pill" style="text-decoration: none;" onclick="deletePenerbit(<?=  htmlspecialchars($penerbit['IDPenerbit']) ?>)">Hapus</button>
+                                    <button class="badge text-bg-danger p-2 rounded-pill" style="text-decoration: none;" onclick="deletePenerbit('<?= htmlspecialchars($penerbit['IDPenerbit']) ?>')">Hapus</button>
                                     <a href="editPenerbit.php?idPe=<?= htmlspecialchars($penerbit['IDPenerbit']) ?>" class="badge text-bg-warning p-2 mx-2 rounded-pill" style="text-decoration: none;">Edit</a>
                                 </td>
                             </tr>
@@ -136,7 +136,7 @@ $penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : []
                         alert('Buku berhasil dihapus!');
                         location.reload();
                     } else {
-                        alert(data);
+                        alert(data.message || 'Gagal menghapus buku.');
                     }
                 })
                 .catch(error => {
@@ -157,7 +157,7 @@ $penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : []
                         alert('Penerbit berhasil dihapus!');
                         location.reload();
                     } else {
-                        alert(data);
+                        alert(data.message || 'Gagal menghapus penerbit.');
                     }
                 })
                 .catch(error => {

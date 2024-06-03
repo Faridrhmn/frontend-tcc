@@ -47,8 +47,8 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         curl_close($ch);
 
         if ($http_code == 200 || $http_code == 201) {
-            echo "<script>alert('Berhasil tambah penerbit'); </script>";
-            header('Location: admin.php');
+            echo "<script>alert('Berhasil tambah penerbit'); window.location.href='admin.php';</script>";
+            // header('Location: admin.php');
             exit();
         } else {
             echo "Failed to add penerbit. HTTP Status Code: $http_code. Response: $response";
