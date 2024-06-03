@@ -96,12 +96,12 @@ $books = isset($booksResponse['data']) ? $booksResponse['data'] : [];
                 ?>
                     <tr>
                     <td><?=$no?></th>
-                    <td><?=$data['IDBuku']?></td>
-                    <td><?=$data['Kategori']?></td>
-                    <td><?=$data['NamaBuku']?></td>
-                    <td><?=$data['Harga']?></td>
-                    <td><?=$data['Stok']?></td>
-                    <td><?=$data['Penerbit']?></td>
+                    <td><?=htmlspecialchars($book['IDBuku'])?></td>
+                    <td><?=htmlspecialchars($book['Kategori'])?></td>
+                    <td><?=htmlspecialchars($book['NamaBuku'])?></td>
+                    <td><?=htmlspecialchars($book['Harga'])?></td>
+                    <td><?=htmlspecialchars($book['Stok'])?></td>
+                    <td><?=htmlspecialchars($book['Penerbit'])?></td>
                     </tr>
                 <?php 
                     $no++;
