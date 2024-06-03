@@ -20,7 +20,14 @@ if (isset($_GET['logout'])) {
 }
 
 $response = file_get_contents($apiUrl);
+if ($response === FALSE) {
+    die("Error: Unable to fetch data from the API.");
+}
+
 $books = json_decode($response, true);
+if (json_last_error() !== JSON_ERROR_NONE) {
+    die("Error: Invalid JSON response from the API.");
+}
 ?>
 
 <!DOCTYPE html>
@@ -84,8 +91,9 @@ $books = json_decode($response, true);
                     </thead>
                     <tbody>
                         <?php
-                        $no = 1;
-                        foreach ($books as $book) {
+                        if (is_array($books)) {
+                            $no = 1;
+                            foreach ($books as $book) {
                         ?>
                         <tr>
                             <td><?= $no ?></td>
@@ -97,7 +105,10 @@ $books = json_decode($response, true);
                             <td><?= $book['penerbit'] ?></td>
                         </tr>
                         <?php
-                            $no++;
+                                $no++;
+                            }
+                        } else {
+                            echo "<tr><td colspan='7'>No data available.</td></tr>";
                         }
                         ?>
                     </tbody>

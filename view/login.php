@@ -49,7 +49,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     } else {
         $status = isset($response['status']) ? $response['status'] : 'unknown';
         $errorMessage = isset($response['error']['message']) ? $response['error']['message'] : 'Unknown error';
-        echo "<script>alert('Login failed: $status - $errorMessage -$result'); window.location.href = 'login.php';</script>";
+        echo "<script>alert('Login failed: $status - $errorMessage -$response'); window.location.href = 'login.php';</script>";
     }
 }
 ?>
