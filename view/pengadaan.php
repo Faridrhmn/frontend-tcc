@@ -15,11 +15,12 @@ if (isset($_GET['logout'])) {
     header('Location: login.php');
     exit();
 }
+
 // Fetch the book with the lowest stock from the API
 $apiUrl = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/books/lowest';
 $response = file_get_contents($apiUrl);
 $data = json_decode($response, true);
-$book = isset($data['data']) ? $data['data'] : [];
+$book = isset($data['data'][0]) ? $data['data'][0] : [];
 
 ?>
 
