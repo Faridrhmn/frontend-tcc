@@ -1,4 +1,4 @@
-<?php 
+<?php
 session_start();
 
 if (empty($_SESSION['status'])) {
@@ -21,9 +21,12 @@ $cari = isset($_GET['cari']) ? $_GET['cari'] : '';
 if ($cari) {
     $apiUrl = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/books/search?name=' . urlencode($cari);
     $response = file_get_contents($apiUrl);
-    $gameData = json_decode($response, true);
+    $bookData = json_decode($response, true);
+    if (json_last_error() !== JSON_ERROR_NONE) {
+        die("Error: Invalid JSON response from the API.");
+    }
 } else {
-    die("data error");
+    die("Data error: No search query provided.");
 }
 ?>
 
@@ -33,9 +36,7 @@ if ($cari) {
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Document</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
-    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
-    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
 </head>
 <body>
     <div class="container-fluid">
@@ -67,9 +68,7 @@ if ($cari) {
             </form>
         </div>
         <div class="col-10 mt-4 mx-5">
-            <?php
-            ?>
-            <h5>Pencarian atas nama: <?= htmlspecialchars($cari) ?> </h5>
+            <h5>Pencarian atas nama: <?= htmlspecialchars($cari) ?></h5>
             <table class="table">
                 <thead>
                     <tr>
@@ -84,17 +83,17 @@ if ($cari) {
                 </thead>
                 <tbody>
                     <?php 
-                    if (isset($gameData['data']) && !empty($gameData['data'])) {
+                    if (isset($bookData['data']) && !empty($bookData['data'])) {
                         $no = 1;
-                        foreach ($gameData['data'] as $data) {
+                        foreach ($bookData['data'] as $data) {
                             echo "<tr>
                                     <td>{$no}</td>
-                                    <td>{$data['IDBuku']}</td>
-                                    <td>{$data['Kategori']}</td>
-                                    <td>{$data['NamaBuku']}</td>
-                                    <td>{$data['Harga']}</td>
-                                    <td>{$data['Stok']}</td>
-                                    <td>{$data['Penerbit']}</td>
+                                    <td>" . htmlspecialchars($data['IDBuku']) . "</td>
+                                    <td>" . htmlspecialchars($data['Kategori']) . "</td>
+                                    <td>" . htmlspecialchars($data['NamaBuku']) . "</td>
+                                    <td>" . htmlspecialchars($data['Harga']) . "</td>
+                                    <td>" . htmlspecialchars($data['Stok']) . "</td>
+                                    <td>" . htmlspecialchars($data['Penerbit']) . "</td>
                                   </tr>";
                             $no++;
                         }

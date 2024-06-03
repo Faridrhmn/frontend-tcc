@@ -68,7 +68,7 @@ $books = isset($booksResponse['data']) ? $booksResponse['data'] : [];
     <!-- Search form -->
     <p class="mt-4 mb-0 mx-5">Cari berdasar nama</p>
     <div class="row g-2 align-items-center mx-5">
-        <form class="d-flex col-4" role="search" method="post" action="search2.php">
+        <form class="d-flex col-4" role="search" method="get" action="search2.php">
             <input class="form-control me-3" type="search" placeholder="Search" aria-label="Search" name="cari">
             <button class="btn btn-outline-success" type="submit">Search</button>
         </form>
