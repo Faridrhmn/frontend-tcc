@@ -139,7 +139,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                     <div class="col-md-6">
                         <label for="pilihan" class="form-label">Penerbit</label>
                         <select id="pilihan" class="form-select" name="pilihan">
-                            <option selected><?= $book['Penerbit'] ?></option>
+                            <option selected><?= $books['Penerbit'] ?></option>
                             <?php 
                                 foreach ($penerbits as $penerbit) {
                                     echo "<option value=\"{$penerbit['NamaPenerbit']}\">{$penerbit['NamaPenerbit']}</option>";
