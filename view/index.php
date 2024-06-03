@@ -74,49 +74,44 @@ $books = isset($booksResponse['data']) ? $booksResponse['data'] : [];
         </form>
     </div>
 
-    <!-- Books list -->
-    <div class="container mt-5">
-        <div class="row justify-content-center">
-            <div class="col-md-8">
-                <h2>Books List</h2>
-                <table class="table">
-                    <thead>
-                        <tr>
-                            <th scope="col">No</th>
-                            <th scope="col">Kode Buku</th>
-                            <th scope="col">Kategori</th>
-                            <th scope="col">Nama Buku</th>
-                            <th scope="col">Harga</th>
-                            <th scope="col">Stok</th>
-                            <th scope="col">Penerbit</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        <?php
-                        if (is_array($books)) {
-                            $no = 1;
-                            foreach ($books as $book) {
-                        ?>
-                        <tr>
-                            <td><?= $no ?></td>
-                            <td><?= htmlspecialchars($book['IDBuku']) ?></td>
-                            <td><?= htmlspecialchars($book['Kategori']) ?></td>
-                            <td><?= htmlspecialchars($book['NamaBuku']) ?></td>
-                            <td><?= htmlspecialchars($book['Harga']) ?></td>
-                            <td><?= htmlspecialchars($book['Stok']) ?></td>
-                            <td><?= htmlspecialchars($book['Penerbit']) ?></td>
-                        </tr>
-                        <?php
-                                $no++;
-                            }
-                        } else {
-                            echo "<tr><td colspan='7'>No data available.</td></tr>";
+    <div class="col-10 mt-4 mx-5">
+            <h5>List data buku</h5>
+            <table class="table">
+                <thead>
+                    <tr>
+                    <th scope="col">No</th>
+                    <th scope="col">Kode Buku</th>
+                    <th scope="col">Kategori</th>
+                    <th scope="col">Nama Buku</th>
+                    <th scope="col">Harga</th>
+                    <th scope="col">Stok</th>
+                    <th scope="col">Penerbit</th>
+                    </tr>
+                </thead>
+                <tbody>
+                <?php 
+                    if (is_array($books)) {
+                        $no = 1;
+                        foreach ($books as $book) {
+                ?>
+                    <tr>
+                    <td><?=$no?></th>
+                    <td><?=$data['IDBuku']?></td>
+                    <td><?=$data['Kategori']?></td>
+                    <td><?=$data['NamaBuku']?></td>
+                    <td><?=$data['Harga']?></td>
+                    <td><?=$data['Stok']?></td>
+                    <td><?=$data['Penerbit']?></td>
+                    </tr>
+                <?php 
+                    $no++;
                         }
-                        ?>
-                    </tbody>
-                </table>
-            </div>
+                    } else {
+                        echo "<tr><td colspan='7'>No data available.</td></tr>";
+                    } 
+                ?>
+                </tbody>
+            </table>
         </div>
-    </div>
 </body>
 </html>
