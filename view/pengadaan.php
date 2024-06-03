@@ -17,10 +17,10 @@ if (isset($_GET['logout'])) {
 }
 
 // Fetch the book with the lowest stock from the API
-$apiUrl = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/books/lowest-stock';
+$apiUrl = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/books/lowest';
 $response = file_get_contents($apiUrl);
 $data = json_decode($response, true);
-$book = $data['data']; // Assuming the API returns an object with a 'data' field containing the book information
+$book = $data['data'];
 
 ?>
 
@@ -59,8 +59,8 @@ $book = $data['data']; // Assuming the API returns an object with a 'data' field
         <?php if ($book) { ?>
         <div class="card mt-4 mx-5" style="width: 30rem;">
             <div class="card-body">
-                <h5 class="card-title"><?= htmlspecialchars($book['namaBuku']) ?> / <?= htmlspecialchars($book['penerbit']) ?></h5>
-                <h6 class="card-subtitle mb-2 text-body-secondary">Sisa stok : <?= htmlspecialchars($book['stok']) ?></h6>
+                <h5 class="card-title"><?= htmlspecialchars($book['NamaBuku']) ?> / <?= htmlspecialchars($book['Penerbit']) ?></h5>
+                <h6 class="card-subtitle mb-2 text-body-secondary">Sisa stok : <?= htmlspecialchars($book['Stok']) ?></h6>
                 <p class="card-text">Dibutuhkan segera buku tersebut karena stok menipis dan kebutuhan meningkat.</p>
             </div>
         </div>

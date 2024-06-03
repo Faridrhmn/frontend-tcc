@@ -2,10 +2,11 @@
 session_start();
 
 if (empty($_SESSION['status'])) {
-	echo "<script>
+    echo "<script>
             alert('Maaf masuk akun terlebih dahulu!');
             window.location.href='login.php';
           </script>";
+    exit();
 }
 
 if (isset($_GET['logout'])) {
@@ -36,7 +37,10 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $newPenerbit);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($newPenerbit));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json'
+        ]);
 
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
@@ -46,7 +50,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
             header('Location: admin.php');
             exit();
         } else {
-            echo "Failed to add penerbit. HTTP Status Code: $http_code. Hasil data: $newPenerbit";
+            echo "Failed to add penerbit. HTTP Status Code: $http_code. Response: $response";
         }
     } else {
         echo "All fields are required.";
@@ -59,7 +63,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Tambah Penerbit</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
@@ -95,7 +99,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form class="row g-3" method="post">
                     <div class="col-md-4">
                         <label for="inputEmail4" class="form-label">Kode Penerbit</label>
-                        <input type="type" class="form-control" name="idpenerbit">
+                        <input type="text" class="form-control" name="idpenerbit">
                     </div>
                     <div class="col-md-8">
                         <label for="inputPassword4" class="form-label">Nama Penerbit</label>
