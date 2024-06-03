@@ -25,24 +25,26 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     );
 
     $context  = stream_context_create($options);
-    $result = file_get_contents($url, false, $context);
+    $result = @file_get_contents($url, false, $context);
 
     if ($result === false) {
-        echo "<script>alert('Error: Failed!'); window.location.href = 'login.php';</script>";
+        $error = error_get_last();
+        echo "<script>alert('Error: " . addslashes($error['message']) . "'); window.location.href = 'login.php';</script>";
     } else {
         $response = json_decode($result, true);
-        if ($response['status'] === 'success') {
+        if (isset($response['status']) && $response['status'] === 'success') {
             $_SESSION['status'] = "login";
             header('Location: index.php');
             exit();
         } else {
-            $status = $response['status'];
-            $errorMessage = $response['error']['message'];
+            $status = isset($response['status']) ? $response['status'] : 'unknown';
+            $errorMessage = isset($response['error']['message']) ? $response['error']['message'] : 'Unknown error';
             echo "<script>alert('Login failed: $status - $errorMessage'); window.location.href = 'login.php';</script>";
         }
     }
 }
 ?>
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
