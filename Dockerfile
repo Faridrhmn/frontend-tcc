@@ -17,7 +17,7 @@ RUN echo '<Directory "/var/www/html">\n\
 # Aktifkan konfigurasi Apache yang baru
 RUN a2enconf custom-directory
 
-# Ekspos port 80 / untuk apache defaultnya 80
+# Ekspos port 80
 EXPOSE 80
 
 # Jalankan Apache di foreground
