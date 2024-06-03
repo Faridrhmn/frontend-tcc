@@ -17,8 +17,11 @@ RUN echo '<Directory "/var/www/html">\n\
 # Aktifkan konfigurasi Apache yang baru
 RUN a2enconf custom-directory
 
-# Ekspos port 80
-EXPOSE 80
+# Mengubah port Apache untuk mendengarkan pada port yang ditentukan oleh variabel lingkungan PORT
+RUN sed -i 's/80/${PORT}/' /etc/apache2/ports.conf /etc/apache2/sites-available/000-default.conf
+
+# Ekspos port yang ditentukan oleh variabel lingkungan PORT
+EXPOSE ${PORT}
 
 # Jalankan Apache di foreground
 CMD ["apache2-foreground"]
