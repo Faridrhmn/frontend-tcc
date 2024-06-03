@@ -7,10 +7,11 @@ $penerbitsResponse = json_decode($responsePenerbits, true);
 $penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : [];
 
 if (empty($_SESSION['status'])) {
-	echo "<script>
+    echo "<script>
             alert('Maaf masuk akun terlebih dahulu!');
             window.location.href='login.php';
           </script>";
+    exit();
 }
 
 if (isset($_GET['logout'])) {
@@ -43,17 +44,21 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $ch = curl_init($url);
         curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
         curl_setopt($ch, CURLOPT_POST, true);
-        curl_setopt($ch, CURLOPT_POSTFIELDS, $newBook);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, json_encode($newBook));
+        curl_setopt($ch, CURLOPT_HTTPHEADER, [
+            'Content-Type: application/json'
+        ]);
 
         $response = curl_exec($ch);
         $http_code = curl_getinfo($ch, CURLINFO_HTTP_CODE);
         curl_close($ch);
 
         if ($http_code == 200 || $http_code == 201) {
+            echo "<script>alert('Berhasil tambah buku'); </script>";
             header('Location: admin.php');
             exit();
         } else {
-            echo "Failed to add book. HTTP Status Code: $http_code";
+            echo "Failed to add book. HTTP Status Code: $http_code. Response: $response";
         }
     } else {
         echo "All fields are required.";
@@ -66,7 +71,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Tambah Buku</title>
     <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-T3c6CoIi6uLrA9TneNEoa7RxnatzjcDSCmG1MXxSR1GAsXEV/Dwwykc2MPK8M2HN" crossorigin="anonymous">
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.8/dist/umd/popper.min.js" integrity="sha384-I7E8VVD/ismYTF4hNIPjVp/Zjvgyol6VFvRkX/vR+Vc4jQkC+hVqc2pM8ODewa9r" crossorigin="anonymous"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.min.js" integrity="sha384-BBtl+eGJRgqQAUMxJ7pMwbEyER4l1g+O15P+16Ep7Q9Q+zqX6gSbd85u4mG4QzX+" crossorigin="anonymous"></script>
@@ -102,7 +107,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form class="row g-3" action="" method="POST">
                     <div class="col-md-4">
                         <label for="inputEmail4" class="form-label">Kode Buku</label>
-                        <input type="type" class="form-control" name="idBuku">
+                        <input type="text" class="form-control" name="idBuku">
                     </div>
                     <div class="col-md-8">
                         <label for="inputPassword4" class="form-label">Kategori</label>

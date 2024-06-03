@@ -3,9 +3,10 @@ session_start();
 
 if (empty($_SESSION['status'])) {
     echo "<script>
-            alert('Maaf, silakan masuk terlebih dahulu!');
+            alert('Maaf masuk akun terlebih dahulu!');
             window.location.href='login.php';
           </script>";
+    exit();
 }
 
 if (isset($_GET['logout'])) {
@@ -60,7 +61,9 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         $response = file_get_contents($apiUrl);
         $penerbitData = json_decode($response, true);
 
-        if (!$penerbitData) {
+        if (isset($penerbitData['data'][0])) {
+            $penerbitData = $penerbitData['data'][0];
+        } else {
             die("Failed to fetch penerbit data.");
         }
     } else {
@@ -83,22 +86,22 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     <div class="container-fluid">
         <nav class="navbar navbar-expand-lg bg-body-tertiary">
             <div class="collapse navbar-collapse" id="navbarNav">
-            <ul class="navbar-nav mx-5">
-                <li class="nav-item">
-                <a class="nav-link" aria-current="page" href="index.php">Home</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link active" href="admin.php">Admin</a>
-                </li>
-                <li class="nav-item">
-                <a class="nav-link" href="pengadaan.php">Pengadaan</a>
-                </li>
-            </ul>
-            <ul class="navbar-nav ms-auto mx-5">
-                <li class="nav-item">
-                    <a class="nav-link" href="?logout">Logout</a>
-                </li>
-            </ul>
+                <ul class="navbar-nav mx-5">
+                    <li class="nav-item">
+                        <a class="nav-link" aria-current="page" href="index.php">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link active" href="admin.php">Admin</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="pengadaan.php">Pengadaan</a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto mx-5">
+                    <li class="nav-item">
+                        <a class="nav-link" href="?logout">Logout</a>
+                    </li>
+                </ul>
             </div>
         </nav>
         <h3 class="mt-4 mx-5">Edit Penerbit</h3>
@@ -110,23 +113,23 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
                 <form class="row g-3" action="" method="post">
                     <div class="col-md-4">
                         <label for="idP" class="form-label">Kode Penerbit</label>
-                        <input class="form-control" type="text" value="<?= $penerbitData['idPenerbit'] ?>" placeholder="<?= $penerbitData['idPenerbit'] ?>" aria-label="Disabled input example" name="idP" readonly>
+                        <input class="form-control" type="text" value="<?= $penerbitData['IDPenerbit'] ?>" placeholder="<?= $penerbitData['IDPenerbit'] ?>" aria-label="Disabled input example" name="idP" readonly>
                     </div>
                     <div class="col-md-8">
                         <label for="namaP" class="form-label">Nama</label>
-                        <input type="text" class="form-control" name="namaP" value="<?= $penerbitData['namaPenerbit'] ?>">
+                        <input type="text" class="form-control" name="namaP" value="<?= $penerbitData['NamaPenerbit'] ?>">
                     </div>
                     <div class="col-12">
                         <label for="alamat" class="form-label">Alamat</label>
-                        <input type="text" class="form-control" name="alamat" value="<?= $penerbitData['alamat'] ?>">
+                        <input type="text" class="form-control" name="alamat" value="<?= $penerbitData['Alamat'] ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="kota" class="form-label">Kota</label>
-                        <input type="text" class="form-control" name="kota" value="<?= $penerbitData['kota'] ?>">
+                        <input type="text" class="form-control" name="kota" value="<?= $penerbitData['Kota'] ?>">
                     </div>
                     <div class="col-md-6">
                         <label for="telp" class="form-label">Telepon</label>
-                        <input type="text" class="form-control" name="telp" value="<?= $penerbitData['telepon'] ?>">
+                        <input type="text" class="form-control" name="telp" value="<?= $penerbitData['Telepon'] ?>">
                     </div>
                     <div class="col-12">
                         <button type="submit" class="btn btn-primary float-end">Simpan</button>
