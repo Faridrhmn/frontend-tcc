@@ -8,7 +8,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
         exit();
     }
 
-    $url = 'https://backend-auth-tcc-3klgbesmja-et.a.run.app/register';
+    $url = 'https://backend-akun-tcc-3klgbesmja-uc.a.run.app/register';
     $data = array(
         'username' => $username,
         'password' => $password

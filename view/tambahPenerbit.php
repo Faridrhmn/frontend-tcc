@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Periksa apakah semua input telah diisi
     if ($idPenerbit && $namaPenerbit && $alamat && $kota && $telepon) {
-        $url = "https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/penerbits";
+        $url = "https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits";
         $newPenerbit = [
             'idPenerbit' => $idPenerbit,
             'namaPenerbit' => $namaPenerbit,

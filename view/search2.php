@@ -19,7 +19,7 @@ if (isset($_GET['logout'])) {
 $cari = isset($_GET['cari']) ? $_GET['cari'] : '';
 
 if ($cari) {
-    $apiUrl = 'https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/books/search?name=' . urlencode($cari);
+    $apiUrl = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/books/search?name=' . urlencode($cari);
     $response = file_get_contents($apiUrl);
     $bookData = json_decode($response, true);
     if (json_last_error() !== JSON_ERROR_NONE) {

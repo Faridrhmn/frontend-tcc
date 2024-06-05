@@ -25,7 +25,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Periksa apakah semua input telah diisi
     if ($idPenerbit && $namaPenerbit && $alamat && $kota && $telepon) {
-        $url = "https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/penerbits/$idPenerbit";
+        $url = "https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits/$idPenerbit";
         $newPenerbit = json_encode([
             'idPenerbit' => $idPenerbit,
             'namaPenerbit' => $namaPenerbit,
@@ -57,7 +57,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idPenerbit = isset($_GET['idPe']) ? $_GET['idPe'] : null;
 
     if ($idPenerbit) {
-        $apiUrl = "https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/penerbits/$idPenerbit";
+        $apiUrl = "https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits/$idPenerbit";
         $response = file_get_contents($apiUrl);
         $penerbitData = json_decode($response, true);
 

@@ -17,7 +17,7 @@ if (isset($_GET['logout'])) {
 }
 
 // Fetch the book with the lowest stock from the API
-$apiUrl = 'https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/books/lowest';
+$apiUrl = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/books/lowest';
 $response = file_get_contents($apiUrl);
 $data = json_decode($response, true);
 $book = isset($data['data'][0]) ? $data['data'][0] : [];

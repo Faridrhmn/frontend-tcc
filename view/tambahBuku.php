@@ -1,7 +1,7 @@
 <?php 
 session_start();
 
-$apiUrlPenerbits = 'https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/penerbits';
+$apiUrlPenerbits = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits';
 $responsePenerbits = file_get_contents($apiUrlPenerbits);
 $penerbitsResponse = json_decode($responsePenerbits, true);
 $penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : [];
@@ -31,7 +31,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Periksa apakah semua input telah diisi
     if ($idBuku && $kategori && $namaBuku && $harga && $stok && $penerbit) {
-        $url = "https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/books";
+        $url = "https://backend-book-tcc-3klgbesmja-et.a.run.app/books";
         $newBook = [
             'idBuku' => $idBuku,
             'kategori' => $kategori,

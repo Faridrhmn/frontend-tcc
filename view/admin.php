@@ -17,8 +17,8 @@ if (isset($_GET['logout'])) {
     exit();
 }
 
-$apiUrlBooks = 'https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/books';
-$apiUrlPenerbits = 'https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/penerbits';
+$apiUrlBooks = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/books';
+$apiUrlPenerbits = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits';
 
 // Fetch books data
 $responseBooks = file_get_contents($apiUrlBooks);
@@ -127,7 +127,7 @@ $penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : []
     <script>
         function deleteBook(idBuku) {
             if (confirm('Apakah Anda yakin ingin menghapus buku ini?')) {
-                fetch(`https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/books/${idBuku}`, {
+                fetch(`https://backend-book-tcc-3klgbesmja-et.a.run.app/books/${idBuku}`, {
                     method: 'DELETE'
                 })
                 .then(response => response.json())
@@ -148,7 +148,7 @@ $penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : []
 
         function deletePenerbit(idPenerbit) {
             if (confirm('Apakah Anda yakin ingin menghapus penerbit ini?')) {
-                fetch(`https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/penerbits/${idPenerbit}`, {
+                fetch(`https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits/${idPenerbit}`, {
                     method: 'DELETE'
                 })
                 .then(response => response.json())
