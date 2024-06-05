@@ -26,7 +26,7 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
 
     // Periksa apakah semua input telah diisi
     if ($idBuku && $kategori && $namaBuku && $harga && $stok && $penerbit) {
-        $url = "https://backend-book-tcc-3klgbesmja-et.a.run.app/books/$idBuku";
+        $url = "https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/books/$idBuku";
         $newBook = json_encode([
             'idBuku' => $idBuku,
             'kategori' => $kategori,
@@ -59,11 +59,11 @@ if ($_SERVER['REQUEST_METHOD'] === 'POST') {
     $idBuku = isset($_GET['idBu']) ? $_GET['idBu'] : null;
 
     if ($idBuku) {
-        $apiUrl = "https://backend-book-tcc-3klgbesmja-et.a.run.app/books/$idBuku";
+        $apiUrl = "https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/books/$idBuku";
         $response = file_get_contents($apiUrl);
         $bookData = json_decode($response, true);
         $books = isset($bookData['data']) ? $bookData['data'] : [];
-        $apiUrlPenerbits = 'https://backend-book-tcc-3klgbesmja-et.a.run.app/penerbits';
+        $apiUrlPenerbits = 'https://backend-distribusi-tcc-3klgbesmja-et.a.run.app/penerbits';
         $responsePenerbits = file_get_contents($apiUrlPenerbits);
         $penerbitsResponse = json_decode($responsePenerbits, true);
         $penerbits = isset($penerbitsResponse['data']) ? $penerbitsResponse['data'] : [];
